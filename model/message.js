@@ -7,6 +7,6 @@ const messageSchema = mongoose.Schema({
     fichier:string,
     sender:{type:mongoose.Schema.Types.ObjectId,ref:"user"},
     conversation :{type:mongoose.Schema.Types.ObjectId,ref:"conversation"}
-})
+},{timestamps:true})
 
 module.exports = mongoose.model("message",messageSchema)
