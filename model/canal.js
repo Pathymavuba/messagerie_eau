@@ -1,9 +1,12 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const canalSchema = mongoose.Schema({
-    title:String,
-    projet:{type:mongoose.Schema.Types.ObjectId,ref:"projet"},
-    members:[{type:mongoose.Schema.Types.ObjectId,ref:"user"}]
-},{timestamps:true})
+const canalSchema = mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    projet: { type: mongoose.Schema.Types.ObjectId, ref: "projet" },
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('canal',canalSchema)
+module.exports = mongoose.model("canal", canalSchema);
