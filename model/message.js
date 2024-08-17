@@ -6,6 +6,7 @@ const messageSchema = mongoose.Schema(
     image: String,
     fichier: String,
     sender: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+    receiver: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     conversation: { type: mongoose.Schema.Types.ObjectId, ref: "conversation" },
   },
   { timestamps: true }

@@ -26,9 +26,10 @@ io.on("connection", (socket) => {
 
   //send a message to a specific user
   socket.on("send-message", async (data) => {
-    const sendUserSocket = onlineUsers[data.to];
+    const sendUserSocket = onlineUsers[data.receiver];
 
     if (sendUserSocket) {
+       //receive message
       socket.to(sendUserSocket).emit("receive", {
         sender: data.sender,
         conversation: data.conversation,
@@ -36,6 +37,7 @@ io.on("connection", (socket) => {
       });
     }
   });
+ 
 
   //send a message when create a groupe
   socket.on("first-time", (data) => {
