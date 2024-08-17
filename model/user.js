@@ -7,10 +7,12 @@ const userSchema = mongoose.Schema(
       required: true,
     },
     lastName: {
-      type: string,
+      type: String,
     },
-    role: string,
-    token:Sting
+    phoneNumber:String,
+    password:String,
+    role: String,
+    token:String
   },
   { timestamps: true }
 );

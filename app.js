@@ -8,6 +8,7 @@ require("./config/db");
 
 
 var usersRouter = require("./routes/users");
+var autRouter = require("./routes/auth")
 
 var app = express();
 
@@ -19,14 +20,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 //message for not found
-app.all("*",(request,response)=>{
-  response.sendStatus(404)
-})
+
 
 app.get("/", (req, res) => {
   res.send("Bienvenu dans l'API EAU");
 });
-app.use("/users", usersRouter);
+app.use("/", usersRouter);
+app.use("/",autRouter)
 
 
 
