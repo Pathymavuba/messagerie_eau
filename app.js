@@ -8,7 +8,8 @@ require("./config/db");
 
 
 var usersRouter = require("./routes/users");
-var autRouter = require("./routes/auth")
+var autRouter = require("./routes/auth");
+var msgRouter = require("./routes/message");
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 });
 app.use("/", usersRouter);
 app.use("/",autRouter)
+app.use("/",msgRouter)
 
 
 

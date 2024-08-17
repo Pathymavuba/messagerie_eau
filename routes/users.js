@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var  router = express.Router();
 const auth = require("../middleware/auth");
 const isAdmin = require("../middleware/isAdmin")
 const { USER } = require('../helpers/roles');
