@@ -20,7 +20,7 @@ const { ADMIN } = require("../helpers/roles");
  */
 router.post("/auth/signup", async (req, res) => {
   try {
-    if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo)
+    if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo ==='s')
       return res.status(400).send("remplissez tous les champs");
     else {
       const oldUser = await User.findOne({ phoneNuber: req.body.tel });

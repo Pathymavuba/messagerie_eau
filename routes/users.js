@@ -37,7 +37,7 @@ router.get('/users',auth, function(req, res) {
  */
 router.post("/users/created",auth,isAdmin, async (req, res) => {
   try {
-    if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo)
+    if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo === '')
       return res.status(400).send("remplissez tous les champs");
     else {
       const oldUser = await User.findOne({ phoneNuber: req.body.tel });
