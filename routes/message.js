@@ -1,13 +1,37 @@
 const Message = require("../model/message");
 const express = require("express");
 const router = express.Router();
+const upload = require("../helpers/multer");
+const path = require("path");
+const cloudinary = require("../helpers/cloudinay");
 
-router.post("/message", async (req, res) => {
+router.post("/message", upload.array("file", 12), async (req, res) => {
+  let image, doc;
+  req.files.map((el) => {
+    if (
+      path.extname(el.originalname) === ".jpg" ||
+      (path.extname(el.originalname) === ".jpeg" &&
+        path.extname(el.originalname) === ".png")
+    ) {
+      image = el;
+    } else if (
+      path.extname(el.originalname) === ".docx" ||
+      path.extname(el.originalname) === ".doc" ||
+      path.extname(el.originalname) === ".pdf"
+    ) {
+      doc = el;
+    }
+  });
   try {
+    //upload file
+
+    const docSent = await cloudinary.uploader.upload(doc);
+    const imageSent = await cloudinary.uploader.upload(image);
+
     const message = await Message.create({
       text: req.body.text,
-      image: req.body.image,
-      fichier: req.body.fichier,
+      image: imageSent.secure_url,
+      fichier: docSent.secure_url,
       sender: req.body.sender,
       receiver: req.body.receiver,
       conversation: req.body.conversation,
