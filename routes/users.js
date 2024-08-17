@@ -7,7 +7,10 @@ const User = require("../model/user");
 
 /* GET users listing. */
 router.get('/users',auth, function(req, res, next) {
-  res.send('respond with a resource');
+ 
+  User.find()
+  .then(users=>res.status(200).json({data:users}))
+  .catch(err=>res.status(500).json({e:err}))
 });
 
 
