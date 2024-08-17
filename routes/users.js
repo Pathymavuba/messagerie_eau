@@ -5,8 +5,16 @@ const isAdmin = require("../middleware/isAdmin")
 const { USER } = require('../helpers/roles');
 const User = require("../model/user");
 
-/* GET users listing. */
-router.get('/users',auth, function(req, res, next) {
+/**
+ * This function handles the retrieval of all users from the database.
+ * It requires authentication and does not have any specific role requirements.
+ *
+ * @param {Object} req - The request object containing the user's data.
+ * @param {Object} res - The response object to send back to the client.
+ * @returns {Object} - The response object with a status code and a JSON object containing the users data.
+ * @throws Will throw an error if any exception occurs during the database operation.
+ */
+router.get('/users',auth, function(req, res) {
  
   User.find()
   .then(users=>res.status(200).json({data:users}))
