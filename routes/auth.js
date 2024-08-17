@@ -18,7 +18,6 @@ const { ADMIN } = require("../helpers/roles");
  * @returns {Object} - The response object containing a success message and the created admin user data if successful, or an error message if not.
  * @throws Will throw an error if the request body is missing any required fields or if a user with the same phone number already exists.
  */
-
 router.post("/auth/signup", async (req, res) => {
   try {
     if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo)
@@ -40,7 +39,6 @@ router.post("/auth/signup", async (req, res) => {
     return res.status(500).send(error);
   }
 });
-//login
 
 /**
  * Handles user login and token generation.
@@ -87,7 +85,15 @@ router.post("/auth/login", async function (req, res) {
   }
 });
 
-//deconnection
+/**
+ * Handles user logout and token invalidation.
+ *
+ * @param {Object} req - The request object containing the user's ID.
+ * @param {Object} res - The response object to send back to the client.
+ * @returns {Object} - The response object containing a success message if the user is successfully logged out, or an error message if not.
+ * @throws Will throw an error if there is an issue updating the user's token in the database.
+ */
+
 router.get("/auth/deconnected", auth, async (req, res) => {
   try {
     await User.updateOne({ _id: req.user.id }, { token: null });

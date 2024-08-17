@@ -1,13 +1,30 @@
 var express = require('express');
 var router = express.Router();
+const auth = require("../middleware/auth");
+const isAdmin = require("../middleware/isAdmin")
+const { USER } = require('../helpers/roles');
+const User = require("../model/user");
 
 /* GET users listing. */
-router.get('/users', function(req, res, next) {
+router.get('/users',auth, function(req, res, next) {
   res.send('respond with a resource');
 });
 
 
-router.post("/users/created", async (req, res) => {
+/**
+ * This function handles the creation of a new user by an admin.
+ * It checks if the required fields are filled, validates the user's phone number,
+ * and creates a new user in the database with hashed password.
+ *
+ * @param {Object} req - The request object containing the user's data.
+ * @param {Object} res - The response object to send back to the client.
+ * @param {string} req.body.tel - The user's phone number.
+ * @param {string} req.body.pwd - The user's password.
+ * @param {string} req.body.pseudo - The user's pseudo.
+ * @returns {Object} - The response object with a status code and a message or data.
+ * @throws Will throw an error if any exception occurs during the process.
+ */
+router.post("/users/created",auth,isAdmin, async (req, res) => {
   try {
     if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo)
       return res.status(400).send("remplissez tous les champs");
@@ -19,10 +36,10 @@ router.post("/users/created", async (req, res) => {
         pseudo: req.body.pseudo,
         phoneNumber: req.body.tel,
         password: hash,
-        role: ADMIN,
+        role: USER,
         token: null,
       });
-      return res.status.json({ msg: "admin created", data: user });
+      return res.status.json({ msg: "user created", data: user });
     }
   } catch (error) {
     return res.status(500).send(error);
