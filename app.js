@@ -30,6 +30,10 @@ app.use("/", usersRouter);
 app.use("/",autRouter)
 app.use("/",msgRouter)
 
+//read file
+app.use("/read/image",express.static(path.join(__dirname, "public/image")))
+app.use("/read/document",express.static(path.join(__dirname, "public/document")))
+
 
 
 
