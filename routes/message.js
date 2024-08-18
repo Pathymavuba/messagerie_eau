@@ -4,6 +4,7 @@ const router = express.Router();
 const upload = require("../helpers/multer");
 const path = require("path");
 const cloudinary = require("../helpers/cloudinay");
+const auth = require("../middleware/auth")
 
 /**
  * Handles the POST request for sending a message with an image and a document.
@@ -14,7 +15,7 @@ const cloudinary = require("../helpers/cloudinay");
  * @returns {Object} - Returns a JSON response with a success message and the created message data.
  *                      If an error occurs, returns a JSON response with an error status.
  */
-router.post("/message", upload.array("file", 12), async (req, res) => {
+router.post("/message",auth, upload.array("file", 12), async (req, res) => {
   let image, doc;
   req.files.map((el) => {
     if (
