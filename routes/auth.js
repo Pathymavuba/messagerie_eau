@@ -12,7 +12,7 @@ const { ADMIN } = require("../helpers/roles");
  *
  * @param {Object} req - The request object containing the admin's phone number, password, and pseudo.
  * @param {Object} res - The response object to send back to the client.
- * @param {string} req.body.tel - The admin's phone number.
+ * @param {string} req.body.email - The admin's phone email.
  * @param {string} req.body.pwd - The admin's password.
  * @param {string} req.body.pseudo - The admin's pseudo.
  * @returns {Object} - The response object containing a success message and the created admin user data if successful, or an error message if not.
@@ -20,23 +20,24 @@ const { ADMIN } = require("../helpers/roles");
  */
 router.post("/auth/signup", async (req, res) => {
   try {
-    if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo ==='')
+    if (req.body.pwd === "" || req.body.pseudo ==='' || req.body.email === "")
       return res.status(400).send("remplissez tous les champs");
     else {
-      const oldUser = await User.findOne({ phoneNuber: req.body.tel });
+      console.log(req.body)
+      const oldUser = await User.findOne({ email: req.body.email });
       if (oldUser) return res.status(409).send("user exists");
       const hash = await bcrypte.hash(req.body.pwd, 10);
       const user = await User.create({
         pseudo: req.body.pseudo,
-        phoneNumber: req.body.tel,
+        email: req.body.email,
         password: hash,
         role: ADMIN,
         token: null,
       });
-      return res.status.json({ msg: "admin created", data: user });
+      return res.status(201).json({ msg: "admin created", data: user });
     }
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send(error.message);
   }
 });
 
@@ -50,9 +51,9 @@ router.post("/auth/signup", async (req, res) => {
  * @returns {Object} - The response object containing the user's data and token if successful, or an error message if not.
  */
 router.post("/auth/login", async function (req, res) {
-  const { tel, pwd } = req.body;
+  const { email, pwd } = req.body;
   try {
-    const user = await User.findOne({ phoneNumber: tel });
+    const user = await User.findOne({ email });
     if (!user) return res.status(404).send("password or phoneNumber incorrect");
     const valid = await bcrypte.compare(pwd, user.password);
     if (!valid)
@@ -60,9 +61,8 @@ router.post("/auth/login", async function (req, res) {
 
     const payload = {
       id: user._id,
-      name: user.name,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
+      pseudo: user.pseudo,
+      email: user.email,
     };
 
     const token = jwt.sign(payload, process.env.SECRET_KEY, {

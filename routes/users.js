@@ -29,7 +29,7 @@ router.get('/users',auth, function(req, res) {
  *
  * @param {Object} req - The request object containing the user's data.
  * @param {Object} res - The response object to send back to the client.
- * @param {string} req.body.tel - The user's phone number.
+ * @param {string} req.body.email - The user's phone email.
  * @param {string} req.body.pwd - The user's password.
  * @param {string} req.body.pseudo - The user's pseudo.
  * @returns {Object} - The response object with a status code and a message or data.
@@ -37,15 +37,15 @@ router.get('/users',auth, function(req, res) {
  */
 router.post("/users/created",auth,isAdmin, async (req, res) => {
   try {
-    if (req.body.tel === "" || req.body.pwd === "" || req.body.pseudo === '')
+    if (req.body.email === "" || req.body.pwd === "" || req.body.pseudo === '')
       return res.status(400).send("remplissez tous les champs");
     else {
-      const oldUser = await User.findOne({ phoneNuber: req.body.tel });
+      const oldUser = await User.findOne({ email: req.body.email });
       if (oldUser) return res.status(409).send("user exists");
       const hash = await bcrypte.hash(req.body.pwd, 10);
       const user = await User.create({
         pseudo: req.body.pseudo,
-        phoneNumber: req.body.tel,
+        email: req.body.email,
         password: hash,
         role: USER,
         token: null,
