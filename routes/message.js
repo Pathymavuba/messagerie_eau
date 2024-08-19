@@ -43,7 +43,7 @@ router.post("/message",auth, upload.array("file", 12), async (req, res) => {
       text: req.body.text,
       image: image.filename,
       fichier: doc.filename,
-      sender: req.body.sender,
+      sender: req.user.id,
       receiver: req.body.receiver,
       conversation: req.body.conversation,
     });
@@ -63,4 +63,27 @@ router.get("/message/:conversationId", async (req, res) => {
     return res.status(500).send(error);
   }
 });
+//messages sended
+router.get("/message/send",auth,async function(req,res){
+try {
+  const messages = await Message.find({sender: req.user.id})
+  .populate({path:"reicever"})
+  if (messages.length === 0) return res.status(404).send("aucun message")
+    return res.status(200).json({status:true,data:messages})
+} catch (error) {
+  return res.status(500).send(error.message)
+}
+})
+
+//messages sended
+router.get("/message/receive/:receiver",auth,async function(req,res){
+  try {
+    const messages = await Message.find({sender: req.params.receiver})
+    .populate({path:"reicever"})
+    if (messages.length === 0) return res.status(404).send("aucun message")
+      return res.status(200).json({status:true,data:messages})
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+  })
 module.exports = router;
