@@ -75,7 +75,7 @@ try {
 }
 })
 
-//messages sended
+//messages received
 router.get("/message/receive/:receiver",auth,async function(req,res){
   try {
     const messages = await Message.find({sender: req.params.receiver})
