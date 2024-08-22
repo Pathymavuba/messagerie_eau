@@ -6,8 +6,8 @@ const userSchema = mongoose.Schema(
       type: String,
       // required: true,
     },
-    email: { type: String, required: true, unique: true },
-    // phoneNumber:String,
+    email_old: { type: String, required: true, unique: true },
+    email_new: { type: String , unique: true },
     password:String,
     role: String,
     token:String

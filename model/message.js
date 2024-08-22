@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const messageSchema = mongoose.Schema(
   {
+    object:String,
     text: { type: String },
     image: String,
     fichier: String,

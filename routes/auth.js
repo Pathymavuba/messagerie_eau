@@ -12,7 +12,7 @@ const { ADMIN } = require("../helpers/roles");
  *
  * @param {Object} req - The request object containing the admin's phone number, password, and pseudo.
  * @param {Object} res - The response object to send back to the client.
- * @param {string} req.body.email - The admin's phone email.
+ * @param {string} req.body.email_new - The admin's phone email.
  * @param {string} req.body.pwd - The admin's password.
  * @param {string} req.body.pseudo - The admin's pseudo.
  * @returns {Object} - The response object containing a success message and the created admin user data if successful, or an error message if not.
@@ -20,16 +20,17 @@ const { ADMIN } = require("../helpers/roles");
  */
 router.post("/auth/signup", async (req, res) => {
   try {
-    if (req.body.pwd === "" || req.body.pseudo ==='' || req.body.email === "")
+    if (req.body.pwd === "" || req.body.pseudo ==='' || req.body.email_old === "")
       return res.status(400).send("remplissez tous les champs");
     else {
-      console.log(req.body)
-      const oldUser = await User.findOne({ email: req.body.email });
+     
+      const oldUser = await User.findOne({ email_old: req.body.email_old });
       if (oldUser) return res.status(409).send("user exists");
       const hash = await bcrypte.hash(req.body.pwd, 10);
       const user = await User.create({
         pseudo: req.body.pseudo,
-        email: req.body.email,
+        email_old: req.body.email_old,
+        email_new:req.body.email_old.split("@")[0]+"@regideso.cd",
         password: hash,
         role: ADMIN,
         token: null,
@@ -46,23 +47,24 @@ router.post("/auth/signup", async (req, res) => {
  *
  * @param {Object} req - The request object containing the user's phone number and password.
  * @param {Object} res - The response object to send back to the client.
- * @param {string} req.body.tel - The user's phone number.
+ * @param {string} req.body.email_old - The user's email_old.
+ * @param {string} req.body.new - The user's email_new.
  * @param {string} req.body.pwd - The user's password.
  * @returns {Object} - The response object containing the user's data and token if successful, or an error message if not.
  */
 router.post("/auth/login", async function (req, res) {
-  const { email, pwd } = req.body;
+  const { email_new,email_old, pwd } = req.body;
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).send("password or phoneNumber incorrect");
+    const user = await User.findOne({ email_old });
+    if (!user) return res.status(404).send("password or email incorrect");
     const valid = await bcrypte.compare(pwd, user.password);
     if (!valid)
-      return res.status(404).send("password or phoneNumber incorrect");
+      return res.status(404).send("password or email incorrect");
 
     const payload = {
       id: user._id,
       pseudo: user.pseudo,
-      email: user.email,
+      email: user.email_new,
     };
 
     const token = jwt.sign(payload, process.env.SECRET_KEY, {
