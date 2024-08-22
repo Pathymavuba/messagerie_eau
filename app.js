@@ -10,6 +10,7 @@ require("./config/db");
 var usersRouter = require("./routes/users");
 var autRouter = require("./routes/auth");
 var msgRouter = require("./routes/message");
+var spamRouter = require("./routes/spam")
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 app.use("/", usersRouter);
 app.use("/",autRouter)
 app.use("/",msgRouter)
+app.use("/",spamRouter)
 
 //read file
 app.use("/read/image",express.static(path.join(__dirname, "public/image")))
