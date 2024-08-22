@@ -54,16 +54,16 @@ router.post("/message",auth, upload.array("file", 12), async (req, res) => {
   }
 });
 
-router.get("/message/:conversationId", async (req, res) => {
-  try {
-    const messages = await Message.find({
-      conversation: req.body.conversationId,
-    }).populate({ path: "conversation" });
-    return res.status(201).json({ msg: "messaged", data: messages });
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-});
+// router.get("/message/:conversationId", async (req, res) => {
+//   try {
+//     const messages = await Message.find({
+//       conversation: req.body.conversationId,
+//     }).populate({ path: "conversation" });
+//     return res.status(201).json({ msg: "messaged", data: messages });
+//   } catch (error) {
+//     return res.status(500).send(error);
+//   }
+// });
 //messages sended
 router.get("/message/send",auth,async function(req,res){
 try {

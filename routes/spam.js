@@ -76,7 +76,7 @@ router.get("/spam/receive/:receiver",auth,async function(req,res){
   //getOne 
   router.get("/spam/:id",auth,async (req,res)=>{
     try {
-        const spam = await Spam.findOne({_id:id})
+        const spam = await Spam.findOne({_id:req.params.id})
         if (!spam) return res.status(404).send('no message')
         return res.status(200).json({status:true,data:spam})
         
