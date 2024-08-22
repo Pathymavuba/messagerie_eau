@@ -1,9 +1,8 @@
-const Message = require("../model/message");
+const Spam = require("../model/spam");
 const express = require("express");
 const router = express.Router();
 const upload = require("../helpers/multer");
 const path = require("path");
-const cloudinary = require("../helpers/cloudinay");
 const auth = require("../middleware/auth")
 
 /**
@@ -15,7 +14,7 @@ const auth = require("../middleware/auth")
  * @returns {Object} - Returns a JSON response with a success message and the created message data.
  *                      If an error occurs, returns a JSON response with an error status.
  */
-router.post("/message",auth, upload.array("file", 12), async (req, res) => {
+router.post("/spam",auth, upload.array("file", 12), async (req, res) => {
   let image, doc;
   req.files.map((el) => {
     if (
@@ -35,64 +34,51 @@ router.post("/message",auth, upload.array("file", 12), async (req, res) => {
   try {
     //upload file
 
- 
-  
-    // return res.json(req.files)
-
-    const message = await Message.create({
-      object:req.body.object,
+    const spam = await Spam.create({
       text: req.body.text,
-      image: image.filename,
-      fichier: doc.filename,
+      image: image?.filename,
+      fichier: doc?.filename,
       sender: req.user.id,
       receiver: req.body.receiver,
-      conversation: req.body.conversation,
+    //   conversation: req.body.conversation,
     });
-    return res.status(201).json({ msg: "msg sended", data: message });
+    return res.status(201).json({ msg: "msg sended", data: spam });
   } catch (error) {
     return res.status(500).send(error.message);
   }
 });
 
-router.get("/message/:conversationId", async (req, res) => {
-  try {
-    const messages = await Message.find({
-      conversation: req.body.conversationId,
-    }).populate({ path: "conversation" });
-    return res.status(201).json({ msg: "messaged", data: messages });
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-});
+
 //messages sended
-router.get("/message/send",auth,async function(req,res){
+router.get("/spam/send",auth,async function(req,res){
 try {
-  const messages = await Message.find({sender: req.user.id})
+  const spams = await Spam.find({sender: req.user.id})
   .populate({path:"reicever"})
-  if (messages.length === 0) return res.status(404).send("aucun message")
-    return res.status(200).json({status:true,data:messages})
+  if (spams.length === 0) return res.status(404).send("aucun message")
+    return res.status(200).json({status:true,data:spams})
 } catch (error) {
   return res.status(500).send(error.message)
 }
 })
 
 //messages received
-router.get("/message/receive/:receiver",auth,async function(req,res){
+router.get("/spam/receive/:receiver",auth,async function(req,res){
   try {
-    const messages = await Message.find({sender: req.params.receiver})
+    const spams = await Spam.find({sender: req.params.receiver})
     .populate({path:"reicever"})
-    if (messages.length === 0) return res.status(404).send("aucun message")
-      return res.status(200).json({status:true,data:messages})
+    if (spams.length === 0) return res.status(404).send("aucun message")
+      return res.status(200).json({status:true,data:spams})
   } catch (error) {
     return res.status(500).send(error.message)
   }
   })
-   //getOne 
-   router.get("/message/:id",auth,async (req,res)=>{
+
+  //getOne 
+  router.get("/spam/:id",auth,async (req,res)=>{
     try {
-        const msg = await Message.findOne({_id:id})
-        if (!msg) return res.status(404).send('no message')
-        return res.status(200).json({status:true,data:msg})
+        const spam = await Spam.findOne({_id:id})
+        if (!spam) return res.status(404).send('no message')
+        return res.status(200).json({status:true,data:spam})
         
     } catch (error) {
         return res.status(500).send(error.message)
