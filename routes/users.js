@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const isAdmin = require("../middleware/isAdmin")
 const { USER } = require('../helpers/roles');
 const User = require("../model/user");
+const {sendToNewUser} = require("../helpers/mailConfig")
 
 /**
  * This function handles the retrieval of all users from the database.
@@ -51,6 +52,7 @@ router.post("/users/created",auth,isAdmin, async (req, res) => {
         role: USER,
         token: null,
       });
+      sendToNewUser(user.email_old,"creation de compte",user.email_new,user.password)
       return res.status.json({ msg: "user created", data: user });
     }
   } catch (error) {
